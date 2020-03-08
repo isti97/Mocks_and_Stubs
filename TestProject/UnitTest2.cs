@@ -10,14 +10,8 @@ namespace TestWithMocks
         private const int pieces = 50;
         //private Warehouse warehouse = new Warehouse();
 
-        //[SetUp]
-        //public void Setup()
-        //{
-        //    warehouse.Add(productName, pieces);
-        //}
-
-        [Test]
-        public void TestFillingRemovesInventoryIfInStock()
+        [SetUp]
+        public void Setup()
         {
             Order order = new Order(productName, pieces);
             var mockWarehouse = new Mock<IWarehouse>(MockBehavior.Strict);
@@ -26,6 +20,11 @@ namespace TestWithMocks
             {
                 o.IsFilled = true;
             });
+        }
+
+        [Test]
+        public void TestFillingRemovesInventoryIfInStock()
+        {
             order.Fill(mockWarehouse.Object);
 
             Assert.IsTrue(order.IsFilled);
