@@ -8,13 +8,12 @@ namespace TestWithMocks
     {
         private const string productName = "Apple";
         private const int pieces = 50;
-        //private Warehouse warehouse = new Warehouse();
+        private Mock<IWarehouse> mockWarehouse;
 
         [SetUp]
         public void Setup()
         {
-            Order order = new Order(productName, pieces);
-            var mockWarehouse = new Mock<IWarehouse>(MockBehavior.Strict);
+            this.mockWarehouse = new Mock<IWarehouse>(MockBehavior.Strict);
             mockWarehouse.Setup(x => x.HasAmount(productName, pieces)).Returns(true);
             mockWarehouse.Setup(x => x.Remove(It.IsAny<Order>())).Callback((Order o) =>
             {
@@ -25,6 +24,7 @@ namespace TestWithMocks
         [Test]
         public void TestFillingRemovesInventoryIfInStock()
         {
+            Order order = new Order(productName, pieces);
             order.Fill(mockWarehouse.Object);
 
             Assert.IsTrue(order.IsFilled);
